@@ -1,15 +1,56 @@
 {
-  "name": "test-app",
+  "name": "@mc/super-easy-mock-app",
   "version": "0.0.1",
-  "description": "",
+  "description": "超级好用的 mock 工具的超级好用的客户端",
+  "author": "yanweiqing",
+  "private": true,
   "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "entry": {
+    "index": "./src/index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "antd": "^3.0.0",
+    "handlebars": "^4.0.11",
+    "moment": "^2.19.3",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
   "devDependencies": {
-    "electron": "^2.0.5"
+    "atool-build": "^0.9.0",
+    "atool-test-mocha": "^0.1.4",
+    "babel-eslint": "^7.0.0",
+    "babel-plugin-import": "^1.0.1",
+    "babel-plugin-transform-runtime": "^6.8.0",
+    "babel-runtime": "^6.9.2",
+    "dora": "0.4.x",
+    "dora-plugin-webpack": "^0.8.1",
+    "electron": "^2.0.5",
+    "electron-builder": "^19.15.1",
+    "eslint": "^3.8.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-import": "^2.0.1",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.4.1",
+    "expect": "^1.20.1",
+    "pre-commit": "1.x",
+    "redbox-react": "^1.2.6"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "build": {
+    "appId": "mc-mock",
+    "mac": {
+      "category": "dmg"
+    }
+  },
+  "scripts": {
+    "dev": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build": "atool-build && node bin/create.js prod",
+    "lint": "eslint --ext .js,.jsx src/",
+    "start": "node bin/create.js dev && dora --plugins webpack",
+    "test": "atool-test-mocha ./**/__tests__/*-test.js"
   }
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Demo</title>
+  {{#cssList}}
+  <link rel="stylesheet" href="{{link}}" />
+  {{/cssList}}
+</head>
+<body>
+
+<div id="root"></div>
+{{#jsList}}
+  <script src="{{link}}"></script>
+{{/jsList}}
+</body>
+</html>
