@@ -1,56 +1,30 @@
 import React, { Component } from 'react';
 import { Tree, Row, Col } from 'antd';
 
+import Doc from './Doc.js';
+import { getFileList } from './utils.js';
+
 const TreeNode = Tree.TreeNode;
 
-const treeData = [{
-  title: '0-0',
-  key: '0-0',
-  children: [{
-    title: '0-0-0',
-    key: '0-0-0',
-    children: [
-      { title: '0-0-0-0', key: '0-0-0-0' },
-      { title: '0-0-0-1', key: '0-0-0-1' },
-      { title: '0-0-0-2', key: '0-0-0-2' },
-    ],
-  }, {
-    title: '0-0-1',
-    key: '0-0-1',
-    children: [
-      { title: '0-0-1-0', key: '0-0-1-0' },
-      { title: '0-0-1-1', key: '0-0-1-1' },
-      { title: '0-0-1-2', key: '0-0-1-2' },
-    ],
-  }, {
-    title: '0-0-2',
-    key: '0-0-2',
-  }],
-}, {
-  title: '0-1',
-  key: '0-1',
-  children: [
-    { title: '0-1-0-0', key: '0-1-0-0' },
-    { title: '0-1-0-1', key: '0-1-0-1' },
-    { title: '0-1-0-2', key: '0-1-0-2' },
-  ],
-}, {
-  title: '0-2',
-  key: '0-2',
-}];
+const treeData = [];
 
 export default class Trees extends React.Component {
   state = {
-    expandedKeys: ['0-0-0', '0-0-1'],
+    treeNode: [],
+    expandedKeys: [],
     autoExpandParent: true,
-    checkedKeys: ['0-0-0'],
+    checkedKeys: [],
     selectedKeys: [],
+  }
+
+  componentDidMount() {
+    this.setState({
+      treeNode: getFileList('mock', this.createTree)
+    });
   }
 
   onExpand = (expandedKeys) => {
     console.log('onExpand', expandedKeys);
-    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
     this.setState({
       expandedKeys,
       autoExpandParent: false,
@@ -63,7 +37,7 @@ export default class Trees extends React.Component {
   }
 
   onSelect = (selectedKeys, info) => {
-    console.log('onSelect', info);
+    console.log(selectedKeys, info);
     this.setState({ selectedKeys });
   }
 
@@ -81,24 +55,28 @@ export default class Trees extends React.Component {
   }
 
   render() {
+    const { expandedKeys, autoExpandParent, checkedKeys, selectedKeys, treeNode } = this.state;
+
     return (
       <Row>
         <Col span={8}>
           <Tree
             checkable
             onExpand={this.onExpand}
-            expandedKeys={this.state.expandedKeys}
-            autoExpandParent={this.state.autoExpandParent}
+            expandedKeys={expandedKeys}
+            autoExpandParent={autoExpandParent}
             onCheck={this.onCheck}
-            checkedKeys={this.state.checkedKeys}
+            checkedKeys={checkedKeys}
             onSelect={this.onSelect}
-            selectedKeys={this.state.selectedKeys}
+            selectedKeys={selectedKeys}
           >
-            {this.renderTreeNodes(treeData)}
+            {this.renderTreeNodes(treeNode)}
           </Tree>
         </Col>
         <Col span={16}>
-          999
+          {selectedKeys.length > 0 && (
+            <Doc filePath={selectedKeys[0]} />
+          )}
         </Col>
       </Row>
     );

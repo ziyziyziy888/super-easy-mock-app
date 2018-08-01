@@ -21,7 +21,7 @@ export default class App extends Component {
     const { activeTab } = this.state;
 
     return (
-      <Layout className="layout">
+      <Layout className="layout" style={styles.outerContainer}>
         <Head
           handleClick={this._changeTab}
           current={activeTab}
@@ -36,7 +36,10 @@ export default class App extends Component {
 }
 
 const styles = {
+  outerContainer: {
+    height: '100%'
+  },
   mainContent: {
-    marginTop: '64px'
+    marginTop: '64px',
   }
 }
