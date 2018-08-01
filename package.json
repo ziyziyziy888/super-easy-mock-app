@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "antd": "^3.0.0",
+    "brace": "^0.11.1",
     "handlebars": "^4.0.11",
     "moment": "^2.19.3",
     "react": "^16.2.0",
+    "react-ace": "^6.1.4",
     "react-dom": "^16.2.0"
   },
   "devDependencies": {

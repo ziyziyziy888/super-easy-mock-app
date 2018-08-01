@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-import { Input, Tooltip, Icon, message } from 'antd';
-const { TextArea } = Input;
+import { Tooltip, Icon, message } from 'antd';
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/json';
+import 'brace/theme/github';
 
 
+// 这个组件的 filePath 有一个特殊的地方，_可能会被外部修改
 export default class Doc extends Component {
   state = {
     content: '',
     defaultContent: '',
+    truePath: '',
     loadSuccess: false
   }
 
@@ -15,33 +21,52 @@ export default class Doc extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.reloadFile(nextProps.filePath);
+    if (nextProps.filePath !== this.props.filePath) {
+      this.reloadFile(nextProps.filePath);
+    }
   }
 
   reloadFile(filePath) {
-    fs.readFile(filePath,'utf8', (err, data) => {
+    let paths = filePath.split('/');
+    let name = paths.pop();
+    paths = paths.join('/') + '/';
+    let newName = name[0] === '_' ? name.slice(1) : '_' + name;
+
+    fs.readFile(paths + name, 'utf8', (err, data) => {
       if (err) {
-        this.setState({
-          loadSuccess: false
+        fs.readFile(paths + newName, 'utf8', (err, data) => {
+          if (err) {
+            this.setState({
+              loadSuccess: false
+            })
+            return;
+          }
+          this.setState({
+            defaultContent: data,
+            content: data,
+            truePath: paths + newName,
+            loadSuccess: true
+          });
         });
         return;
       }
       this.setState({
         defaultContent: data,
         content: data,
+        truePath: paths + name,
         loadSuccess: true
       });
     });
   }
 
-  handleChange = (e) => {
+  handleChange = (newVal) => {
     this.setState({
-      content: e.target.value
+      content: newVal
     });
   }
 
   handleSave = () => {
-    fs.writeFile(this.props.filePath, this.state.content, (err) => {
+    fs.writeFile(this.state.truePath, this.state.content, (err) => {
       if (!err) {
         message.success('保存成功');
         this.setState({
@@ -62,10 +87,14 @@ export default class Doc extends Component {
         <h2>{filePath}</h2>
 
         {loadSuccess && (
-          <TextArea
-            rows={22}
-            value={content}
+          <AceEditor
+            mode="json"
+            theme="github"
             onChange={this.handleChange}
+            name="hualalala"
+            editorProps={{$blockScrolling: true}}
+            value={content}
+            style={{width: '100%'}}
           />
         )}
 

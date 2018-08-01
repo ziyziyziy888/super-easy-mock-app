@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Tree, Row, Col } from 'antd';
 
 import Doc from './Doc.js';
-import { getFileList } from './utils.js';
+import { getFileList, changeFile } from '../utils/index.js';
 
 const TreeNode = Tree.TreeNode;
 
@@ -18,13 +18,14 @@ export default class Trees extends React.Component {
   }
 
   componentDidMount() {
+    const list = getFileList('mock', this.createTree);
     this.setState({
-      treeNode: getFileList('mock', this.createTree)
+      treeNode: list.fileList,
+      checkedKeys: list.checkedList
     });
   }
 
   onExpand = (expandedKeys) => {
-    console.log('onExpand', expandedKeys);
     this.setState({
       expandedKeys,
       autoExpandParent: false,
@@ -32,12 +33,23 @@ export default class Trees extends React.Component {
   }
 
   onCheck = (checkedKeys) => {
-    console.log('onCheck', checkedKeys);
+    let unCheckNew = [];
+    let checkNew = [];
+    this.state.checkedKeys.forEach(item => {
+      if (checkedKeys.indexOf(item) < 0) {
+        unCheckNew.push(item);
+      }
+    });
+    checkedKeys.forEach(item => {
+      if (this.state.checkedKeys.indexOf(item) < 0) {
+        checkNew.push(item);
+      }
+    })
+    changeFile(unCheckNew, checkNew);
     this.setState({ checkedKeys });
   }
 
   onSelect = (selectedKeys, info) => {
-    console.log(selectedKeys, info);
     this.setState({ selectedKeys });
   }
 

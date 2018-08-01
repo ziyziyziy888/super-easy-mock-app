@@ -8,7 +8,7 @@ let win
 function createWindow () {
   // 创建浏览器窗口。
   win = new BrowserWindow({
-    width: 800, height: 600, show: false
+    width: 800, height: 660, show: false
   })
 
   // 然后加载应用的 index.html。
