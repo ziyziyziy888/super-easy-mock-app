@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { Layout } from 'antd';
+const { Content } = Layout;
 
-import Header from './Header.js';
+import Head from './Header.js';
 import Setting from './Setting.js';
 import Trees from './Tree.js';
 
@@ -19,14 +21,22 @@ export default class App extends Component {
     const { activeTab } = this.state;
 
     return (
-      <div>
-        <Header
+      <Layout className="layout">
+        <Head
           handleClick={this._changeTab}
           current={activeTab}
         />
-        {activeTab === 'tree' && <Trees />}
-        {activeTab === 'setting' && <Setting />}
-      </div>
+        <Content style={styles.mainContent}>
+          {activeTab === 'tree' && <Trees />}
+          {activeTab === 'setting' && <Setting />}
+        </Content>
+      </Layout>
     )
+  }
+}
+
+const styles = {
+  mainContent: {
+    marginTop: '64px'
   }
 }
